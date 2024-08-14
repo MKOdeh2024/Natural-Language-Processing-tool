@@ -1,5 +1,6 @@
 import { checkForName } from './nameChecker';
 
+
 const handleSubmit = async(event) => {
     event.preventDefault();
 
@@ -50,6 +51,7 @@ const handleSubmit = async(event) => {
         hideLoading();
     }
 };
+
 
 const isValidUrl = (string) => {
     try {

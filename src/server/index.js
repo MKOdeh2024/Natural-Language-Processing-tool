@@ -1,48 +1,38 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const fetch = require('node-fetch');
 const axios = require('axios');
 const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 const port = 3000;
 
 // Middleware to parse JSON request bodies
+app.use(bodyParser.json());
 app.use(express.json());
+app.use(express.static('dist'));
 
 // Replace with your MeaningCloud API key
 const apiKey = process.env.API_KEY;
 
 // Function to analyze sentiment using MeaningCloud API
-async function analyzeSentiment(text) {
-    try {
-        const response = await axios.post('https://api.meaningcloud.com/sentiment-2.1', null, {
-            params: {
-                key: apiKey,
-                txt: text,
-                lang: 'en', // Language of the text
-            },
-        });
-
-        return response.data;
-    } catch (error) {
-        console.error('Error analyzing sentiment:', error);
-        throw error;
-    }
-}
-
-// Route to handle sentiment analysis requests
-app.post('/analyze-sentiment', async(req, res) => {
+app.post('/analyze', async(req, res) => {
     const { text } = req.body;
-
-    if (!text) {
-        return res.status(400).json({ error: 'Text is required for sentiment analysis' });
-    }
+    const url = `https://api.meaningcloud.com/sentiment-2.1?key=${apiKey}&txt=${encodeURIComponent(text)}&lang=en`;
 
     try {
-        const sentimentResult = await analyzeSentiment(text);
-        res.json(sentimentResult);
+        const response = await fetch(url);
+        const data = await response.json();
+        res.send(data);
     } catch (error) {
-        res.status(500).json({ error: 'Failed to analyze sentiment' });
+        console.error('Error:', error);
+        res.status(500).send('Error analyzing text');
     }
+});
+
+app.get('/', function(req, res) {
+    res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
 });
 
 // Start the Express server
