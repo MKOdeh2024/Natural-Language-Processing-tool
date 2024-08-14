@@ -1,20 +1,51 @@
-const express = require("express");
+const express = require('express');
+const axios = require('axios');
 const dotenv = require('dotenv');
 
-dotenv.config();
 const app = express();
+const port = 3000;
 
-app.use(express.static('dist'))
+// Middleware to parse JSON request bodies
+app.use(express.json());
 
-// You could call it aylienapi, or anything else
-var textapi = new aylien({
-    application_id: process.env.API_ID,
-    application_key: process.env.API_KEY,
+// Replace with your MeaningCloud API key
+const apiKey = process.env.API_KEY;
+
+// Function to analyze sentiment using MeaningCloud API
+async function analyzeSentiment(text) {
+    try {
+        const response = await axios.post('https://api.meaningcloud.com/sentiment-2.1', null, {
+            params: {
+                key: apiKey,
+                txt: text,
+                lang: 'en', // Language of the text
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error analyzing sentiment:', error);
+        throw error;
+    }
+}
+
+// Route to handle sentiment analysis requests
+app.post('/analyze-sentiment', async(req, res) => {
+    const { text } = req.body;
+
+    if (!text) {
+        return res.status(400).json({ error: 'Text is required for sentiment analysis' });
+    }
+
+    try {
+        const sentimentResult = await analyzeSentiment(text);
+        res.json(sentimentResult);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to analyze sentiment' });
+    }
 });
 
-
-app.get('/', function(req, res) {
-    res.sendFile('dist/index.html')
-})
-
-app.listen(8080, () => console.log("Example app listening on port 8080!"));
+// Start the Express server
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
