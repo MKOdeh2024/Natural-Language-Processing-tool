@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', handleSubmit);
 });
 
+alert("I EXIST")
+
 export {
     handleSubmit,
     checkForName
