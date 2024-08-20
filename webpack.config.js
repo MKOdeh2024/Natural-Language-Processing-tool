@@ -1,5 +1,7 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
     entry: './src/index.js',
@@ -30,6 +32,10 @@ module.exports = {
         plugins: [
             new CleanWebpackPlugin(),
             // Other plugins
+            new TerserPlugin({
+                // Terser options here
+            }),
+            new OptimizeCSSAssetsPlugin({})
         ],
     },
     mode: 'development',

@@ -1,8 +1,8 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const fetch = require('node-fetch');
-const axios = require('axios');
-const dotenv = require('dotenv');
+import express from 'express';
+import bodyParser from 'body-parser';
+import fetch from 'node-fetch';
+import axios from 'axios';
+import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
