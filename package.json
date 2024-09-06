@@ -3,6 +3,7 @@
     "outDir": "dist",
     "type": "module",
     "scripts": {
+        "sass": "sass --watch styles:css --source-map",
         "test": "jest",
         "start": "node src/server/index.js",
         "build-prod": "webpack --config webpack.prod.js",

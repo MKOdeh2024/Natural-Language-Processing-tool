@@ -1,4 +1,4 @@
-import { checkForName } from './nameChecker';
+import { checkForName } from './nameChecker.js';
 
 
 const handleSubmit = async(event) => {
